@@ -1,0 +1,22 @@
+<van-notice-bar
+  wrapable
+  color="#1989fa"
+  background="#ecf9ff"
+  scrollable="{{ false }}"
+  text="在这里你可以对正在上的课给一些反馈和评分，方便后来的同学们作为选课参考，同时也能在课程详情页和同学们愉快的发帖讨论~"
+/>
+
+<van-index-bar index-list="{{ majors }}">
+  <view wx:for="{{courses}}" wx:key="_id">
+    <van-index-anchor index="{{item._id}}" use-slot>{{item._id}} 课程</van-index-anchor>
+    <van-cell 
+    wx:for="{{item.courses}}" 
+    wx:for-item="course"
+    title="{{item._id}} {{course.code}} | {{course.title}}"
+    link-type="navigateTo"
+    url="/pages/courseDetail/index?id={{course.courseId}}&major={{course.major}}&code={{course.code}}&title={{course.title}}" />
+  </view>
+
+</van-index-bar>
+
+<view class="empty"></view>

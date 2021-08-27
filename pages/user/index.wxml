@@ -1,0 +1,114 @@
+<van-grid border="{{ false }}" icon-size="40px">
+  <van-grid-item icon="/image/document.png" text="平台说明" bind:click="showDocument" />
+  <van-grid-item icon="/image/share.png" text="分享小程序" bind:click="shareApp" open-type="share" />
+  <van-grid-item icon="/image/contact.png" text="联系作者" bind:click="contactAuthor"/>
+  <van-grid-item icon="/image/feedback.png" text="意见反馈" bind:click="openFeedback" />
+</van-grid>
+
+<block wx:if="{{userInfo}}">
+  <van-tabs active="{{ activeTab }}" bind:change="changeTab" color="#1989fa">
+    <van-tab title="帖子">
+      <block wx:if="{{ postList && postList.length !== 0 }}">
+        <view wx:for="{{postList}}" class="post">
+          <view class="cu-card dynamic no-card">
+            <view class="cu-item shadow">
+              <view class="cu-list menu-avatar">
+                <view class="cu-item">
+                  <view class="cu-avatar round lg" style="background-image:url({{item.userInfo.avatarUrl}});"></view>
+                  <view class="content flex-sub">
+                    <view>{{item.userInfo.nickName}}</view>
+                    <view class="text-gray text-sm flex justify-between">
+                      {{item.createdAt}}
+                    </view>
+                  </view>
+                </view>
+              </view>
+              <view class="text-content">
+                {{item.postContent}}
+              </view>
+              <view class="grid flex-sub padding-lr col-3 grid-square">
+                <view class="bg-img" wx:for="{{item.postImages}}" wx:for-item="image" wx:key="index">
+                  <image src="{{image}}" mode="aspectFill" bindtap="previewImage" data-images="{{item.postImages}}" data-index="{{index}}" />
+                </view>
+              </view>
+              <view class="text-gray text-sm text-right padding">
+                <text class="cuIcon-deletefill margin-lr-xs" bindtap="deletePost" data-item="{{item}}"></text>
+              </view>
+              <view class="padding-sm"></view>
+            </view>
+          </view> 
+        </view>
+      </block>
+      <block wx:else>
+        <van-empty description="暂未发布课程帖子" />
+      </block>
+    </van-tab>
+    <van-tab title="{{publishButton ? '朋友圈' : '资讯'}}">
+      <block wx:if="{{ timelineList && timelineList.length !== 0 }}">
+        <view wx:for="{{ timelineList }}" class="post">
+          <view class="cu-card dynamic no-card">
+            <view class="cu-item shadow">
+              <view class="cu-list menu-avatar">
+                <view class="cu-item">
+                  <view class="cu-avatar round lg" style="background-image:url({{item.userInfo.avatarUrl}});"></view>
+                  <view class="content flex-sub">
+                    <view>{{item.userInfo.nickName}}</view>
+                    <view class="text-gray text-sm flex justify-between">
+                      {{item.createdAt}}
+                    </view>
+                  </view>
+                </view>
+              </view>
+              <view class="text-content">
+                {{item.timelineContent}}
+              </view>
+              <view class="grid flex-sub padding-lr col-3 grid-square">
+                <view class="bg-img" wx:for="{{item.timelineImages}}" wx:for-item="image" wx:key="index">
+                  <image src="{{image}}" mode="aspectFill" bindtap="previewImage" data-images="{{item.timelineImages}}" data-index="{{index}}" />
+                </view>
+              </view>
+              <view class="text-gray text-sm text-right padding">
+                <text class="cuIcon-deletefill margin-lr-xs" bindtap="deleteTimeline" data-item="{{item}}"></text>
+              </view>
+            </view>
+          </view> 
+        </view>
+      </block>
+      <block wx:else>
+        <van-empty description="暂未发布朋友圈" />
+      </block>
+    </van-tab>
+    <van-tab title="课程评价">
+      <block wx:if="{{ ratingList && ratingList.length !== 0 }}">
+        <van-cell-group>
+          <van-cell wx:for="{{ ratingList }}" border="{{ false }}" label="{{item.content}}" value="{{item.rating}} 分" icon="{{item.userInfo.avatarUrl}}">
+            <view slot="title">
+              {{item.userInfo.nickName}}
+            </view>
+          </van-cell>
+        </van-cell-group>
+      </block>
+      <block wx:else>
+        <van-empty description="暂未作出任何课程评价" />
+      </block>
+    </van-tab>
+  </van-tabs>
+</block>
+<block wx:else>
+  <view class="loginButton">
+    <view class="text-center"><van-button type="info" round bind:click="login">登录</van-button></view>
+  </view>
+</block>
+
+<van-share-sheet
+  show="{{ showShare }}"
+  title="立即分享给好友"
+  options="{{ shareOptions }}"
+  bind:select="selectShare"
+  bind:close="closeShare"
+/>
+
+<van-dialog id="van-dialog" />
+<van-toast id="van-toast" />
+
+<view class="empty"></view>

@@ -1,0 +1,36 @@
+{
+  "setting": {},
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/course/index",
+          "pathName": "pages/course/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/courseDetail/index",
+          "pathName": "pages/courseDetail/index",
+          "query": "id=8f9ff6396121f7ed00df764f79b97bf7",
+          "scene": null
+        },
+        {
+          "name": "pages/courseDetail/index",
+          "pathName": "pages/courseDetail/index",
+          "query": "id=8f9ff6396121f7ed00df764f79b97bf7",
+          "scene": null
+        }
+      ]
+    }
+  }
+}

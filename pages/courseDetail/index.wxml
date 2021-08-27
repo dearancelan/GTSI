@@ -1,0 +1,133 @@
+<view class="bg-white solids-bottom padding-xs flex align-center">
+  <view class="flex-sub text-center">
+    <view class="text-xl padding">
+      <text class="text-blue text-bold">{{major}} {{code}} | {{title}}</text>
+    </view>
+  </view>
+</view>
+
+<block wx:if="{{publishButton}}">
+  <van-grid column-num="2" border="{{ false }}">
+    <van-grid-item use-slot>
+      <van-button plain type="primary" round size="small" bind:click="{{userInfo ? 'showRatingForm' : 'login'}}">发布评分</van-button>
+    </van-grid-item> 
+    <van-grid-item use-slot>
+      <van-button plain type="info" round size="small" bind:click="{{userInfo ? 'showPostForm' : 'login'}}">发布帖子</van-button>
+    </van-grid-item>
+  </van-grid>
+</block>
+
+<van-tabs active="{{ activeTab }}" bind:change="changeTab" color="#1989fa" swipeable>
+  <van-tab title="评分与评价">
+    <block wx:if="{{ ratingList && ratingList.length !== 0 }}">
+      <van-cell-group>
+        <van-cell title="平均分（实时更新）" value="{{averageRating}}" />
+        <van-cell wx:for="{{ ratingList }}" border="{{ false }}" label="{{item.content}}" value="{{item.rating}} 分" icon="{{item.userInfo.avatarUrl}}">
+          <view slot="title">
+            {{item.userInfo.nickName}}
+          </view>
+        </van-cell>
+      </van-cell-group>
+    </block>
+    <block wx:else>
+      <van-empty description="暂无相关评分，如果你上过这门课，请点击上方绿色按钮给一些建议和评价，方便以后的同学们选课参考~" />
+    </block>
+  </van-tab>
+  <van-tab title="相关帖子">
+    <block wx:if="{{ postList && postList.length !== 0 }}">
+      <view wx:for="{{postList}}" class="post">
+        <view class="cu-card dynamic no-card">
+          <view class="cu-item shadow">
+            <view class="cu-list menu-avatar">
+              <view class="cu-item">
+                <view class="cu-avatar round lg" style="background-image:url({{item.userInfo.avatarUrl}});"></view>
+                <view class="content flex-sub">
+                  <view>{{item.userInfo.nickName}}</view>
+                  <view class="text-gray text-sm flex justify-between">
+                    {{item.createdAt}}
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class="text-content">
+              {{item.postContent}}
+            </view>
+            <view class="grid flex-sub padding-lr col-3 grid-square">
+              <view class="bg-img" wx:for="{{item.postImages}}" wx:for-item="image" wx:key="index">
+                <image src="{{image}}" mode="aspectFill" bindtap="previewImage" data-images="{{item.postImages}}" data-index="{{index}}"/>
+              </view>
+            </view>
+            <view class="padding-sm"></view>
+          </view>
+        </view> 
+      </view>
+    </block>
+    <block wx:else>
+      <van-empty description="暂无相关帖子，点击上方中间的蓝色按钮发布吧" />
+    </block>
+  </van-tab>
+</van-tabs>
+
+<!-- 发布帖子 -->
+<van-popup
+  show="{{ showPostForm }}"
+  round
+  position="top"
+  custom-style="height: 50%"
+  bind:close="closePostForm"
+> 
+  <form bindsubmit="publishPost">
+    <van-field
+      model:value="{{ postContent }}"
+      label="帖子内容"
+      placeholder="请输入内容"
+      type="textarea"
+      autosize
+      required
+      border="{{ false }}"
+    />
+    <view class="postForm">
+      <van-uploader file-list="{{ postImages }}" max-count="3" multiple bind:after-read="uploadPostImage" bind:delete="deleteImage" />
+    </view>
+
+    <van-grid column-num="2" border="{{ false }}">
+      <van-grid-item use-slot>
+        <van-button round size="small" type="primary" bind:click="closePostForm">取消</van-button>
+      </van-grid-item>
+      <van-grid-item use-slot><van-button round size="small" type="info" formType="submit">发布</van-button></van-grid-item>
+    </van-grid>
+  </form>
+</van-popup> 
+
+<!-- 发布评分 -->
+<van-popup
+  show="{{ showRatingForm }}"
+  round
+  position="top"
+  custom-style="height: 50%"
+  bind:close="closeRatingForm"
+>
+  <van-cell center title="评分" required>
+    <van-stepper value="{{ ratingValue }}" min="1" max="10" integer bind:change="changeRating" />
+  </van-cell>
+  <van-field
+    model:value="{{ ratingContent }}"
+    label="评价"
+    type="textarea"
+    placeholder="请输入一些意见和建议"
+    autosize
+    border="{{ false }}"
+  />
+  <van-grid column-num="2" border="{{ false }}">
+    <van-grid-item use-slot>
+      <van-button round size="small" type="primary" bind:click="closeRatingForm">取消</van-button>
+    </van-grid-item>
+    <van-grid-item use-slot>
+      <van-button round size="small" type="info" bind:click="publishRating">发布</van-button>
+    </van-grid-item>
+  </van-grid>
+</van-popup> 
+
+<van-toast id="van-toast" />
+
+<view class="empty"></view>

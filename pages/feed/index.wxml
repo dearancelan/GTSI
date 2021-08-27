@@ -1,0 +1,80 @@
+<block wx:if="{{publishButton}}">
+  <van-search value="{{ searchValue }}" 
+    placeholder="请输入搜索关键词" 
+    shape="round" 
+    use-action-slot 
+    bind:change="changeSearchValue" 
+    bind:search="search"
+  >
+      <view slot="action">
+        <van-icon name="add" size="18px" color="rgb(24,119,242,0.9)" bind:click="{{userInfo ? 'showTimelineForm' : 'login'}}" />
+      </view>
+  </van-search>
+</block>
+
+<block wx:if="{{ timelineList && timelineList.length !== 0 }}">
+  <view wx:for="{{ timelineList }}" class="post">
+    <view class="cu-card dynamic no-card">
+      <view class="cu-item shadow">
+        <view class="cu-list menu-avatar">
+          <view class="cu-item">
+            <view class="cu-avatar round lg" style="background-image:url({{item.userInfo.avatarUrl}});"></view>
+            <view class="content flex-sub">
+              <view><open-data type="userNickName"></open-data></view>
+              <view class="text-gray text-sm flex justify-between">
+                {{item.createdAt}}
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="text-content">
+          {{item.timelineContent}}
+        </view>
+        <view class="grid flex-sub padding-lr col-3 grid-square">
+          <view class="bg-img" wx:for="{{item.timelineImages}}" wx:for-item="image" wx:key="index">
+            <image src="{{image}}" mode="aspectFill" data-images="{{item.timelineImages}}" data-index="{{index}}"  bindtap="previewImage" />
+          </view>
+        </view>
+        <view class="padding-sm"></view>
+      </view>
+    </view> 
+  </view>
+</block>
+<block wx:else>
+  <van-empty image="search" description="暂时还没有内容，点击最上方蓝色按钮，与大家分享你的动态吧" />
+</block>
+
+<!-- 发布帖子 -->
+<van-popup
+  show="{{ showTimelineForm }}"
+  round
+  position="top"
+  custom-style="height: 50%"
+  bind:close="closeTimelineForm"
+> 
+  <form bindsubmit="publishTimeline">
+    <van-field
+      model:value="{{ timelineContent }}"
+      label="帖子内容"
+      placeholder="请输入内容"
+      type="textarea"
+      autosize
+      required
+      border="{{ false }}"
+    />
+    <view class="timelineForm">
+      <van-uploader file-list="{{ timelineImages }}" max-count="3" multiple bind:after-read="uploadTimelineImage" bind:delete="deleteImage" />
+    </view>
+
+    <van-grid column-num="2" border="{{ false }}">
+      <van-grid-item use-slot>
+        <van-button round size="small" type="primary" bind:click="closeTimelineForm">取消</van-button>
+      </van-grid-item>
+      <van-grid-item use-slot><van-button round size="small" type="info" formType="submit">发布</van-button></van-grid-item>
+    </van-grid>
+  </form>
+</van-popup> 
+
+<van-toast id="van-toast" />
+
+<view class="empty"></view>

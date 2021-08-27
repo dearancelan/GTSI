@@ -1,0 +1,34 @@
+@import '../../miniprogram_npm/@vant/weapp/common/index.wxss';
+
+.courseTitle {
+  text-align: center;
+  color: #1989fa; 
+  font-size: 16px !important;
+}
+
+.rating {
+  text-align: center;
+  padding: 20px;
+}
+
+.postForm {
+  padding: 10px;
+}
+
+.post {
+  padding-bottom: 2px;
+}
+
+.text {
+  font-size: '28px';
+  color: '';
+}
+
+.postTitle {
+  font-size: 20px;
+}
+
+.empty {
+  width: 100%;
+  height: 110rpx;
+}
